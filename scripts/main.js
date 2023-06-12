@@ -53,6 +53,32 @@ function main(gl)
     // buffer creation for rain
     var rainBuffer = gl.createBuffer();
 
+    // buffer for walls
+    var frontBuffer = gl.createBuffer();  // z=1
+    var backBuffer = gl.createBuffer();   // where z=-1
+    var leftBuffer = gl.createBuffer();   // where x=-1
+    var rightBuffer = gl.createBuffer();  // where x=1
+
+    // buffer for top and bottom
+    var skyBuffer = gl.createBuffer();
+    var floorBuffer = gl.createBuffer();
+
+    // other buffers
+    var flowerBuffer = gl.createBuffer();
+
+    // setup flowers -- this occurs only once.
+    var flowerData = []
+    let max_flower = randomRange(10, 20);
+    for(let num_flowers=0; num_flowers<max_flower; num_flowers++)
+    {
+        let oneFlower = putFlower([Math.random(), Math.random(), Math.random(), 1]);
+
+        // we have an array within array within array
+        // [ [ flowerInner, flowerOuter ] ]
+        // add flowe
+        flowerData.push(oneFlower);
+    }
+
     init();
 
     // render
@@ -195,6 +221,50 @@ function main(gl)
         return rainParams;
     }
     
+    function drawEnv()
+    {
+        InitDrawVariables(frontBuffer, frontWall);
+        // draw
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, frontWall.length / 9);
+
+        
+        InitDrawVariables(backBuffer, backWall);
+        // draw
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, backWall.length / 9);
+
+        
+        InitDrawVariables(leftBuffer, leftWall);
+        // draw
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, leftWall.length / 9);
+
+        
+        InitDrawVariables(rightBuffer, rightWall);
+        // draw
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, rightWall.length / 9);
+
+        
+        InitDrawVariables(skyBuffer, skypts);
+        // draw
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, skypts.length / 9);
+
+        
+        InitDrawVariables(floorBuffer, floorpts);
+        // draw
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, floorpts.length / 9);
+
+        // draw the flowers here
+        // flower data contains the array containing the matrix of inner and outer
+        flowerData.forEach(flower => {
+            // draw outer
+            InitDrawVariables(flowerBuffer, flower[0]);
+            gl.drawArrays(gl.TRIANGLE_FAN, 0, flower[0].length);
+
+            // draw inner
+            InitDrawVariables(flowerBuffer, flower[1]);
+            gl.drawArrays(gl.TRIANGLE_FAN, 0, flower[1].length);
+        });
+    }
+
     // Renders the scene repeatedly.
     function render(now)
     {
@@ -219,7 +289,10 @@ function main(gl)
             [params.color_r, params.color_g, params.color_b, params.color_a]);
     
         console.log(params);
-    
+
+        // draw environment
+        drawEnv();
+
         // draw scene w rain
         InitDrawVariables(rainBuffer, allRain);
     
