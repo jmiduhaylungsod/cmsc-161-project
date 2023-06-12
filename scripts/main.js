@@ -103,13 +103,14 @@ function main(gl)
     */
     function setScene()
     {
-        const near = -1;
-        const far = 10;
     
         // setting up initial values/transform
-        glMatrix.mat4.lookAt(viewMatrix, [0,0,-1,1], [0,0,1,1], [0,1,0,1]);
-        // initial projection!
-        glMatrix.mat4.ortho(projectionMatrix, -1, 1, -1, 1, near, far);
+        glMatrix.mat4.lookAt(viewMatrix, [0,0,0,1], [0,0,0,1], [0,1,0,1]);
+        var fov = 0.7;
+        var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+        var near = 0.1; 
+        var far = 100;
+        glMatrix.mat4.perspective(projectionMatrix, fov, aspect, Number(near), Number(far));	
     
         
         console.log("cleared screen");
