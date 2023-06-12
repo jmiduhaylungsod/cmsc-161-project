@@ -12,10 +12,13 @@ Jeano Miguel Duhaylungsod
 Renzo Cabarco
 
 ## Dependencies
-Lorem ipsum
+
+- gl-matrix
+- WebGL
+
 ## How to run 
 
-You can run rainy day - lofi beats to relax/study to by simply [insert thing here].
+You can run rainy day - lofi beats to relax/study to by simply clicking on this [link](https://project-rain.netlify.app).
 
 ## Paramters and Interactions
 
@@ -29,3 +32,4 @@ There are multiple parameters that allow you to customize your ideal rain:
 
 You may also interact with the scene directly.
 - Camera movements: pressing any directional key allows you to look around the environment.
+- Mouse: the camera also follows your mouse.
