@@ -31,27 +31,39 @@ function createDrop(color, lineMaxVariation, lineLen)
     let y = 1 + Math.random();                  // y should always be above the space (ensure na di muna irender untill bababa)
     let z = Math.random() - randomRange(0, 1);
     let bottomVert = [x, y, z, 1];
-    // add color to bottom vertex
-    InsertData(bottomVert, color);
-    bottomVert.push(1);
 
-    // TOP VERTEX
-    // the placement of this vertex depends on the length of the line and its variation value
-    // higher variation = chance to be different from original linelen
-    
-    // we get a random value between 1 to maxVariation
-    // multiply said value with our length to get the actual length
+    /*
+        TOP VERTEX
+            // the placement of this vertex depends on the length of the line and its variation value
+            // higher variation = chance to be different from original linelen
+            
+            // we get a random value between 1 to maxVariation
+            // multiply said value with our length to get the actual length
+    */
     let variation = randomRange(1, lineMaxVariation);
     let actualLen = lineLen * variation;
 
     // calculate the new position of y
     let topVert = [x, y+actualLen, z, 1];
-    // console.log("actual length "+actualLen);
-    // console.log("y_up "+(y+actualLen)+" y_down "+y);
+
+    /*
+        ADDING THE COLOR + size ?
+    */
+
+    // check distance of x and y sa cam -- relative to the distance yung magiging alpha value
+    // desired behavior is the farther (greater dist) = the less opaque
+    let distanceFromCam = Math.sqrt(Math.pow(x, 2) + Math.pow(z, 2));
+    color[3] = distanceFromCam / color[3];  // modify the alpha value
+
+    console.log("new color "+ color[3]);
+
+    // add color to bottom vertex
+    InsertData(bottomVert, color);
+    bottomVert.push(1);
 
     // insert the color to our top vertex
     InsertData(topVert, color);
-    topVert.push(1);    // size 0.5
+    topVert.push(1);
 
     // insert topvert into bottom vert and return bottom vert
     // the form of bottomVert then be
