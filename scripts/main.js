@@ -67,7 +67,7 @@ function main(gl)
 
     // setup flowers -- this occurs only once.
     var flowerData = []
-    let max_flower = randomRange(10, 20);
+    let max_flower = randomRange(10, 30);
     for(let num_flowers=0; num_flowers<max_flower; num_flowers++)
     {
         let oneFlower = putFlower([Math.random(), Math.random(), Math.random(), 1]);
