@@ -7,14 +7,22 @@
         <!--SLIDERS-->
         <div class="params">
             DROP LENGTH     = <input type="range" min="0.03" max="0.1" step="0.01" value="0.03" class="slider" id="rain-len">
+            <br>
             DROP VARIANCE   = <input type="range" min="1" max="10" value="1" class="slider" id="rain-len-var">
+            <br>
             RAIN SPEED      = <input type="range" min="1" max="10" value="1" class="slider" id="rain-speed">
+            <br>
             RAIN VOLUME     = <input type="range" min="1" max="10" value="1" class="slider" id="rain-volume">
+            <br>
         </div>
         <!---->
+        <br>
         MODIFY COLOR
         <div class="color">
-
+            R <input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="color-r">
+            G <input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="color-g">
+            B <input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="color-b">
+            A <input type="range" min="0.2" max="1" value="1" step="0.01" class="slider" id="color-alpha">
         </div>
 
     <!---->
@@ -65,10 +73,6 @@
 
     <!--MAIN-->
     <script>
-        let allRain = [];
-
-
-        let then = 0;
 
         // initialize the gl and shit
         // gets the canvas w/c we will apply the script to
