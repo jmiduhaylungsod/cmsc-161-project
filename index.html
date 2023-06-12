@@ -91,7 +91,6 @@
 
         // we can access the pointers here already
         var vertexPositionPtr = gl.getAttribLocation(program, 'a_position');
-        var vertexSizePtr = gl.getAttribLocation(program, 'a_point_size');
         var vertexColorPtr = gl.getAttribLocation(program, 'in_Color');
         // for affine transformationheadVertexCount
         var transformPtr = gl.getUniformLocation(program, 'u_transformation_matrix');
@@ -100,6 +99,17 @@
         var modelPtr = gl.getUniformLocation(program, 'model');
         var viewPtr = gl.getUniformLocation(program, 'view');
         var projectionPtr = gl.getUniformLocation(program, 'projection');
+
+
+        // init values for tf matrix    
+        var transformMatrix = [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+        ];
+
+        let tr_y=0;
         
 
         /* 
@@ -112,7 +122,7 @@
         init();
         InitDrawVariables(rainBuffer);
 
-        // uutualizes teh initial values of glmatrix
+        // uutualizes teh initial values of glmatrix -- initial
         function init()
         {
             // setting up initial values/transform
@@ -134,6 +144,8 @@
             // SETTING UP BUFFERS ETC
             // binding the buffer
             gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            // setting the data for the buffer
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(allRain), gl.STATIC_DRAW);
 
             /*
             * FOR INTERPRETING THE DATA
@@ -162,15 +174,26 @@
             // update then
             then = now;
 
+            // set transform thingy
+            let tmatrix = [0, 0, 0,
+                            0, 0, 0,
+                            0, tr_y, 0];
+
+            translate(tmatrix, transformMatrix);
+
             // draw scene w rain
+
+            // clear the screen
+            gl.clearColor(-1.0, -1.0, -1.0 , 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
             InitDrawVariables(rainBuffer);
             draw(gl);
 
-            // update the y position of rain in rainArr based on dt.
-            for(let i=1;i<allRain.length;i += lenPerVertex + 1)
-            {
-                allRain[i] -= dt * 0.1;   // negative kasi pababa siya
-            }
+            // update y
+            tr_y *= dt;
+
+            
 
             requestAnimationFrame(render);
         }
