@@ -34,6 +34,16 @@ function main(gl)
     var modelPtr = gl.getUniformLocation(program, 'model');
     var viewPtr = gl.getUniformLocation(program, 'view');
     var projectionPtr = gl.getUniformLocation(program, 'projection');
+    
+    // setting up initial values/transform
+    glMatrix.mat4.lookAt(viewMatrix, [0,0,0], [0,0,1], [0,1,0]);
+    // projection matrix init
+    const near = 0.1;
+    const far = 100;
+    const fov = 0.7;
+    const aspect = gl.canvas.clientWidth/gl.canvas.clientHeight;
+    // glMatrix.mat4.ortho(projectionMatrix, -1, 1, -1, 1, near, far);
+    glMatrix.mat4.perspective(projectionMatrix, fov, aspect, near, far);
 
     /* 
         FORDA BUFFERS
@@ -102,16 +112,6 @@ function main(gl)
     */
     function setScene()
     {
-    
-        // setting up initial values/transform
-        glMatrix.mat4.lookAt(viewMatrix, [0,0,0,1], [0,0,0,1], [0,1,0,1]);
-        var fov = 0.7;
-        var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-        var near = 0.1; 
-        var far = 100;
-        glMatrix.mat4.perspective(projectionMatrix, fov, aspect, Number(near), Number(far));	
-    
-        
         console.log("cleared screen");
         gl.uniformMatrix4fv(transformPtr, false, new Float32Array(transformMatrix));
     
@@ -125,6 +125,23 @@ function main(gl)
         // clear the screen
         gl.clearColor(0, 0, 0, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
+
+        if (keys['ArrowUp']) {
+            glMatrix.mat4.rotateX(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(0.2));
+            console.log("in up");
+        }
+        if (keys['ArrowDown']) {
+            glMatrix.mat4.rotateX(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(-0.2));
+            console.log("in down");
+        }
+        if (keys['ArrowLeft']) {
+            glMatrix.mat4.rotateY(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(-0.2));
+            console.log("in left");
+        }
+        if (keys['ArrowRight']) {
+            glMatrix.mat4.rotateY(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(0.2));
+            console.log("in right");
+        }
     
     }
     
