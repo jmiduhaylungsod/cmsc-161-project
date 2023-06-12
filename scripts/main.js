@@ -1,5 +1,6 @@
 let allRain = [];
 let then = 0;
+const rotate_speed = 0.3;
 
 function main(gl)
 {
@@ -70,6 +71,7 @@ function main(gl)
         gl.enableVertexAttribArray(vertexColorPtr);
         gl.enableVertexAttribArray(vertexSizePtr);
         gl.enable(gl.DEPTH_TEST);
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     }
     
     /*
@@ -127,19 +129,19 @@ function main(gl)
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         if (keys['ArrowUp']) {
-            glMatrix.mat4.rotateX(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(0.2));
+            glMatrix.mat4.rotateX(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(rotate_speed));
             console.log("in up");
         }
         if (keys['ArrowDown']) {
-            glMatrix.mat4.rotateX(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(-0.2));
+            glMatrix.mat4.rotateX(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(-rotate_speed));
             console.log("in down");
         }
         if (keys['ArrowLeft']) {
-            glMatrix.mat4.rotateY(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(-0.2));
+            glMatrix.mat4.rotateY(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(-rotate_speed));
             console.log("in left");
         }
         if (keys['ArrowRight']) {
-            glMatrix.mat4.rotateY(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(0.2));
+            glMatrix.mat4.rotateY(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(rotate_speed));
             console.log("in right");
         }
     
