@@ -2,6 +2,10 @@
 <html>
     <canvas id="output" width="728" height="942"></canvas>
 
+    <script id="index" src="scripts/index.js"></script>
+    <script id="rain" src="scripts/rain.js"></script>
+    <script id="gl-matrix" src="scripts/gl-matrix.js"></script>
+
     <!-- SHADERS -->
     <script id="vertex-shader" type="notjs">#version 300 es
         in vec4 a_position;
@@ -43,7 +47,6 @@
 
     <!--MAIN-->
     <script>
-        import * as INDEX from "scripts/index.js";
 
         let then = 0;
 
@@ -79,6 +82,8 @@
         const modelMatrix = glMatrix.mat4.create();
         const viewMatrix = glMatrix.mat4.create();
         const projectionMatrix = glMatrix.mat4.create();
+        const near = -1;
+        const far = 10;
 
         /*
             POINTERS
@@ -130,9 +135,6 @@
             // binding the buffer
             gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-            // setting the data for the buffer
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(INDEX.allRain), gl.STATIC_DRAW);
-
             /*
             * FOR INTERPRETING THE DATA
             */
@@ -162,12 +164,12 @@
 
             // draw scene w rain
             InitDrawVariables(rainBuffer);
-            INDEX.draw(gl);
+            draw(gl);
 
             // update the y position of rain in rainArr based on dt.
-            for(let i=1;i<INDEX.allRain.length;i += lenPerVertex + 1)
+            for(let i=1;i<allRain.length;i += lenPerVertex + 1)
             {
-                INDEX.allRain[i] -= dt;   // negative kasi pababa siya
+                allRain[i] -= dt * 0.1;   // negative kasi pababa siya
             }
 
             requestAnimationFrame(render);
@@ -175,6 +177,15 @@
 
         // render
         requestAnimationFrame(render);
+
+        function createShader (gl, type, sourceCode) 
+        {
+            // Compiles either a shader of type gl.VERTEX_SHADER or gl.FRAGMENT_SHADER
+            var shader = gl.createShader( type );
+            gl.shaderSource( shader, sourceCode );
+            gl.compileShader( shader );
+            return shader;
+        }
 
     </script>
 </html>

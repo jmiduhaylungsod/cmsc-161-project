@@ -73,7 +73,7 @@ function InsertData(dest, src)
 
     The volume determines how much rain exactly we should create
 */
-export function createRain(rainVerts, volume=1, lineMaxVariation=1, color=(1,1,1,1))
+function createRain(rainVerts, volume=1, lineMaxVariation=1, color=(1,1,1,1))
 {
     let droplets = [];
 
