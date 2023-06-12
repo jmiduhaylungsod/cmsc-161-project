@@ -51,12 +51,11 @@ function createDrop(color, lineMaxVariation, lineLen)
     */
 
     // check distance of x and y sa cam -- relative to the distance yung magiging alpha value
-    // desired value is the farther (greater dist) = the less opaque
+    // desired behavior is the farther (greater dist) = the less opaque
     let distanceFromCam = Math.sqrt(Math.pow(x, 2) + Math.pow(z, 2));
     color[3] = distanceFromCam / color[3];  // modify the alpha value
 
-    console.log("distfrom cam 0,0 "+distanceFromCam);
-    console.log("new color alpha "+color[3])
+    console.log("new color "+ color[3]);
 
     // add color to bottom vertex
     InsertData(bottomVert, color);

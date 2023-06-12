@@ -168,7 +168,7 @@ function main(gl)
             color_r: Number((document.getElementById("color-r")).value),
             color_g: Number((document.getElementById("color-g")).value),
             color_b: Number((document.getElementById("color-b")).value),
-            color_a: Number((document.getElementById("color-alpha")).value),
+            color_a: Number((document.getElementById("color-alpha")).value)
         }
     
         return rainParams;
