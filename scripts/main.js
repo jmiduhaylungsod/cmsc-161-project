@@ -1,4 +1,3 @@
-
 let allRain = [];
 let then = 0;
 
@@ -149,7 +148,7 @@ function main(gl)
     /*
         Updates the positions of rain and other things in the screen. Affected by the modifiable parameters
     */
-    function update(delta, speed)
+    function update(delta, speed, dir)
     {
         // update y manually -- i think sa mat4.translate, yung buong buffer or buong space ng buffer yung nattranslate instead of
         // individual drops, which results in makikita mong gumagalaw lahat (even the newly created drops) as a unit / nagsspawn
@@ -159,6 +158,7 @@ function main(gl)
         {
             // update the y manually?
             allRain[i] -= delta * speed;
+            allRain[i-1] += delta * dir;
     
             // note that bottom vertex (for the rain) is an odd index, while top is even
             // here we check if thie current vertex y is now past -1, meaning nasa bottom na
@@ -186,6 +186,8 @@ function main(gl)
             color_g: Number((document.getElementById("color-g")).value),
             color_b: Number((document.getElementById("color-b")).value),
             color_a: Number((document.getElementById("color-alpha")).value),
+            dir: Number((document.getElementById("dir")).value)
+
         }
     
         return rainParams;
@@ -207,7 +209,12 @@ function main(gl)
         let params = getElementData();
         
         // create and add to rain
-        createRain(allRain, params.len, params.volume, params.lenVar, [params.color_r, params.color_g, params.color_b, params.color_a]);
+        createRain(allRain, 
+            params.len, 
+            params.volume, 
+            params.lenVar,
+            params.dir,
+            [params.color_r, params.color_g, params.color_b, params.color_a]);
     
         console.log(params);
     
@@ -218,7 +225,7 @@ function main(gl)
         gl.drawArrays(gl.LINES, 0, allRain.length/9);    // 8 is size of individual element arrays (4 pos, 4 color)
     
         // call function to update
-        update(dt, params.spd);
+        update(dt, params.spd, params.dir);
     
         requestAnimationFrame(render);
     }
