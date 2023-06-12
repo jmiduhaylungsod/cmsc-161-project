@@ -190,6 +190,17 @@
             // initial projection!
             glMatrix.mat4.ortho(projectionMatrix, -1, 1, -1, 1, near, far);
 
+            
+            console.log("cleared screen");
+            gl.uniformMatrix4fv(transformPtr, false, new Float32Array(transformMatrix));
+
+            //
+            // dito iseset yung values ng uniform matrices.
+            //
+            gl.uniformMatrix4fv(modelPtr, false, new Float32Array(modelMatrix));
+            gl.uniformMatrix4fv(viewPtr, false, new Float32Array(viewMatrix));
+            gl.uniformMatrix4fv(projectionPtr, false, new Float32Array(projectionMatrix));
+
             // clear the screen
             gl.clearColor(0, 0, 0, 1.0);
             gl.clear(gl.COLOR_BUFFER_BIT);
