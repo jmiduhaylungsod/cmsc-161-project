@@ -46,8 +46,8 @@ function createDrop(color, lineMaxVariation, lineLen)
 
     // calculate the new position of y
     let topVert = [x, y+actualLen, z, 1];
-    console.log("actual length "+actualLen);
-    console.log("y_up "+(y+actualLen)+" y_down "+y);
+    // console.log("actual length "+actualLen);
+    // console.log("y_up "+(y+actualLen)+" y_down "+y);
 
     // insert the color to our top vertex
     InsertData(topVert, color);
