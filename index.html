@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <html>
-    <canvas id="output" width="2048" height="1024"></canvas>
+    <canvas id="output" width="1024" height="512"></canvas>
+    
+    <!-- BUTTONS -->
+
+        <!--SLIDERS-->
+        <div class="params">
+            DROP LENGTH     = <input type="range" min="0.03" max="0.1" step="0.01" value="0.03" class="slider" id="rain-len">
+            DROP VARIANCE   = <input type="range" min="1" max="10" value="1" class="slider" id="rain-len-var">
+            RAIN SPEED      = <input type="range" min="1" max="10" value="1" class="slider" id="rain-speed">
+            RAIN VOLUME     = <input type="range" min="1" max="10" value="1" class="slider" id="rain-volume">
+        </div>
+        <!---->
+        MODIFY COLOR
+        <div class="color">
+
+        </div>
+
+    <!---->
+
 
     <script id="rain" src="scripts/rain.js"></script>
     <script id="gl-matrix" src="scripts/gl-matrix.js"></script>
@@ -47,15 +65,6 @@
     <!--MAIN-->
     <script>
         let allRain = [];
-
-        /*
-            TEMP -- PUT MODIFIABLE PARAMETERS HERE
-        */
-       var speed = 3;
-
-        /*
-            END OF TEMP REGION
-        */
 
 
         let then = 0;
@@ -203,7 +212,7 @@
         /*
             Updates the positions of rain and other things. Affected by the modifiable parameters
         */
-        function update(delta)
+        function update(delta, speed)
         {
             // update y manually -- i think sa mat4.translate, yung buong buffer or buong space ng buffer yung nattranslate instead of
             // individual drops, which results in makikita mong gumagalaw lahat (even the newly created drops) as a unit / nagsspawn
@@ -212,7 +221,7 @@
             for(let i=1;i<allRain.length;i+=sizeOfElement)
             {
                 // update the y manually?
-                allRain[i] -= delta;
+                allRain[i] -= delta * speed;
 
                 // note that bottom vertex (for the rain) is an odd index, while top is even
                 // here we check if thie current vertex y is now past -1, meaning nasa bottom na
@@ -228,6 +237,19 @@
             }
         }
 
+        // gets the slider data
+        function getElementData()
+        {
+            let rainParams = {
+                spd: Number((document.getElementById("rain-speed")).value),
+                len: Number((document.getElementById("rain-len")).value),
+                lenVar: Number((document.getElementById("rain-len-var")).value),
+                volume: Number((document.getElementById("rain-volume")).value)
+            }
+
+            return rainParams;
+        }
+
         // Renders the scene repeatedly.
         function render(now)
         {
@@ -240,9 +262,13 @@
 
             // set camera
             setScene();
+
+            let params = getElementData();
             
             // create and add to rain
-            createRain(allRain);
+            createRain(allRain, params.len, params.volume, params.lenVar, [1,1,1,1]);
+
+            console.log(params);
 
             // draw scene w rain
             InitDrawVariables(rainBuffer, allRain);
@@ -251,7 +277,7 @@
             gl.drawArrays(gl.LINES, 0, allRain.length/9);    // 8 is size of individual element arrays (4 pos, 4 color)
 
             // call function to update
-            update(dt);
+            update(dt, params.spd);
 
             requestAnimationFrame(render);
         }
