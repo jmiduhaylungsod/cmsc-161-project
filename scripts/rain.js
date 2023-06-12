@@ -55,7 +55,7 @@ function createDrop(color, lineMaxVariation, lineLen, dir)
     let distanceFromCam = Math.sqrt(Math.pow(x, 2) + Math.pow(z, 2));
     color[3] = distanceFromCam / color[3];  // modify the alpha value
 
-    console.log("new color "+ color[3]);
+    // console.log("new color "+ color[3]);
 
     // add color to bottom vertex
     InsertData(bottomVert, color);

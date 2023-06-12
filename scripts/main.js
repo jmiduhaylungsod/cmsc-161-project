@@ -1,6 +1,5 @@
 let allRain = [];
 let then = 0;
-const rotate_speed = 0.3;
 
 function main(gl)
 {
@@ -140,7 +139,7 @@ function main(gl)
     */
     function setScene()
     {
-        console.log("cleared screen");
+        // console.log("cleared screen");
         gl.uniformMatrix4fv(transformPtr, false, new Float32Array(transformMatrix));
     
         //
@@ -155,21 +154,23 @@ function main(gl)
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         if (keys['ArrowUp']) {
-            glMatrix.mat4.rotateX(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(rotate_speed));
+            glMatrix.mat4.rotateX(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(camSpeed));
             console.log("in up");
         }
         if (keys['ArrowDown']) {
-            glMatrix.mat4.rotateX(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(-rotate_speed));
+            glMatrix.mat4.rotateX(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(-camSpeed));
             console.log("in down");
         }
         if (keys['ArrowLeft']) {
-            glMatrix.mat4.rotateY(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(-rotate_speed));
+            glMatrix.mat4.rotateY(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(-camSpeed));
             console.log("in left");
         }
         if (keys['ArrowRight']) {
-            glMatrix.mat4.rotateY(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(rotate_speed));
+            glMatrix.mat4.rotateY(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(camSpeed));
             console.log("in right");
         }
+        glMatrix.mat4.rotateX(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(camSpeed * moveFactor_Y));
+        glMatrix.mat4.rotateY(viewMatrix, viewMatrix, glMatrix.glMatrix.toRadian(camSpeed * moveFactor_X));
     
     }
     
@@ -288,7 +289,9 @@ function main(gl)
             params.dir,
             [params.color_r, params.color_g, params.color_b, params.color_a]);
     
-        console.log(params);
+        // console.log(params);
+    
+        //console.log(params);
 
         // draw environment
         drawEnv();
