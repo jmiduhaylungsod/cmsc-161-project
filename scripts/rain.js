@@ -13,7 +13,7 @@ function randomRange(min, max)
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-function createDrop(color, lineMaxVariation, lineLen)
+function createDrop(color, lineMaxVariation, lineLen, dir)
 {
     /*
         Each dropet has an x, y, and z, with each x being randomized from -1 to 1, z being randomized from -1 to 1, and y being randomized
@@ -44,7 +44,7 @@ function createDrop(color, lineMaxVariation, lineLen)
     let actualLen = lineLen * variation;
 
     // calculate the new position of y
-    let topVert = [x, y+actualLen, z, 1];
+    let topVert = [x+(actualLen*-1*dir), y+actualLen, z, 1];
 
     /*
         ADDING THE COLOR + size ?
@@ -91,11 +91,12 @@ function InsertData(dest, src)
     > volume is the amount of rain (not exact number of droplets, just the scale thingy) -- is 1 by default
     > lineMaxVariation is the amount of variation of line length -> this is 1 by default (no variation)
         > max is 10 (rain length of 0.3)
+    > line dir -> -1 for left, 1 for right (extreme)
     > color is the color of the line (white by default)
 
     The volume determines how much rain exactly we should create
 */
-function createRain(rainVerts, rainLen=0.03, volume=1, lineMaxVariation=1, color=[1.0,1.0,1.0,1.0])
+function createRain(rainVerts, rainLen=0.03, volume=1, lineMaxVariation=1, lineDir=0, color=[1.0,1.0,1.0,1.0])
 {
     let droplets = [];
 
@@ -116,7 +117,7 @@ function createRain(rainVerts, rainLen=0.03, volume=1, lineMaxVariation=1, color
          */
         
         // create element here
-        let drop = createDrop(color, lineMaxVariation, rainLen);
+        let drop = createDrop(color, lineMaxVariation, rainLen, lineDir);
         // add the drop into droplets
         InsertData(droplets, drop);
     }
