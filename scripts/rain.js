@@ -75,7 +75,7 @@ function InsertData(dest, src)
 
 /* 
     creating rain droplets
-    > rainLen is the length of the drop (default is 0.05)
+    > rainLen is the length of the drop (default is 0.03, max of 0.1)
     > volume is the amount of rain (not exact number of droplets, just the scale thingy) -- is 1 by default
     > lineMaxVariation is the amount of variation of line length -> this is 1 by default (no variation)
         > max is 10 (rain length of 0.3)
@@ -87,8 +87,8 @@ function createRain(rainVerts, rainLen=0.03, volume=1, lineMaxVariation=1, color
 {
     let droplets = [];
 
-    // get a random amount of droplets affected by 
-    let max = 10;   // pass into getrandit to get a numebr between 0 and 10
+    // get a random amount of droplets affected by volume
+    let max = 5;   // this means, we create 5 rain drops at a time.
     let rainCount = randomRange(1, max) * volume;   // multiply result by volume to scale the amount of rain
 
     for(let i=0;i<rainCount;i++)
