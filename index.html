@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <canvas id="output" width="728" height="942"></canvas>
+    <!-- OTHER SCRIPTS -->
+    <script id="index" src="scripts/index.js"></script>
+
+    <!-- SHADERS -->
+    <script id="vertex-shader" type="notjs">#version 300 es
+        in vec4 a_position;
+        in float a_point_size;
+
+        in vec4 in_Color;
+        out vec4 v_Color;
+
+        // transformation matrix here
+        uniform mat4 u_transformation_matrix;
+
+        // glmatrix things
+        uniform mat4 model;
+        uniform mat4 view;
+        uniform mat4 projection;
+
+        void main() {
+            gl_Position = u_transformation_matrix * projection * view * model * a_position;
+            gl_PointSize = a_point_size;
+
+            // we basically output the input in_Color w/c will be used by frag shader
+            v_Color = in_Color;
+        }
+    </script>
+
+    <script id="fragment-shader" type="notjs">#version 300 es
+        precision mediump float;
+        
+        // input will be same name as the output color name of the vshader
+        in vec4 v_Color;
+
+        // this will then apply the color thingy
+        out vec4 out_Color;
+        
+        void main() {
+            out_Color = v_Color;
+        }
+    </script>
+
+    <!--MAIN-->
+    <script>
+        let then = 0;
+
+        // initialize the gl and shit
+        // gets the canvas w/c we will apply the script to
+        const canvas = document.querySelector("#output");
+        const gl = canvas.getContext("webgl2");
+        //const glMatrix = document.querySelector("gl-matrix");
+
+        // gets the source code sa <script>s sa taas
+        const vertexShaderSource = document.querySelector('#vertex-shader').textContent;
+        const fragmentShaderSource = document.querySelector('#fragment-shader').textContent;
+
+        //creates and compiles the shaders
+        const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+        const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+
+        // create and initialize the gl program.
+        var program = gl.createProgram();
+
+        // attach the vertex and fragment shaders
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+
+        // link the program
+        gl.linkProgram(program);
+        gl.useProgram(program);
+
+        // Renders the scene repeatedly.
+        function render(now)
+        {
+            now *= .001;
+            // get dt
+            dt = now - then;
+            // update then
+            then = now;
+
+            // draw scene
+            draw(gl, );
+            // update the y position of rain in rainArr based on dt.
+
+            requestAnimationFrame(render);
+        }
+
+        // render
+        requestAnimationFrame(render);
+
+    </script>
+</html>
