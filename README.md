@@ -1,4 +1,7 @@
-# rainy day - lofi beats to study cs161 to
+# cmsc-161-project
+## Title: __rainy day - lofi beats to relax / study to__
+
+## Description 
 
 rainy day - lofi beats to relax/study to is a procedural rain generator made with WebGL. Originally concieved from the idea that driving through rain and snow looked like travelling through space, rainy day - lofi beats to relax/study to has morphed into a rain generator in a earthly 3d environment.
 
@@ -9,10 +12,12 @@ Jeano Miguel Duhaylungsod
 Renzo Cabarco
 
 ## Dependencies
-
-## How To Run
+Lorem ipsum
+## How to run 
 
 You can run rainy day - lofi beats to relax/study to by simply [insert thing here].
+
+## Paramters and Interactions
 
 There are multiple parameters that allow you to customize your ideal rain:
 - Drop Length: this is the minimum length of a rain drop.
