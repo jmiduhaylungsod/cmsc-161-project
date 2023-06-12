@@ -1,5 +1,4 @@
-# cmsc-161-project
-## Title: __rainy day - lofi beats to relax / study to__
+# Title: __rainy day - lofi beats to relax / study to__
 
 ## Description 
 
@@ -7,9 +6,9 @@ rainy day - lofi beats to relax/study to is a procedural rain generator made wit
 
 ## Group Members
 
-Chloe Cyan Apacible
-Jeano Miguel Duhaylungsod
-Renzo Cabarco
+- Chloe Cyan Apacible
+- Jeano Miguel Duhaylungsod
+- Renzo Cabarco
 
 ## Dependencies
 
