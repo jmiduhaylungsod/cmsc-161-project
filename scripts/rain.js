@@ -28,12 +28,12 @@ function createDrop(color, lineMaxVariation, lineLen)
     let x = Math.random() - randomRange(0, 1);  // gets random num from 0 to 1 (1 non inclusive), subtracted by 1 or 0
                                                 // basically sub by 1 is negative x, else positive.
 
-    let y =  Math.random();                  // y should always be above the space (ensure na di muna irender untill bababa)
+    let y = 1 + Math.random();                  // y should always be above the space (ensure na di muna irender untill bababa)
     let z = Math.random() - randomRange(0, 1);
     let bottomVert = [x, y, z, 1];
     // add color to bottom vertex
     InsertData(bottomVert, color);
-    bottomVert.push(0.5);
+    bottomVert.push(1);
 
     // TOP VERTEX
     // the placement of this vertex depends on the length of the line and its variation value
@@ -46,13 +46,12 @@ function createDrop(color, lineMaxVariation, lineLen)
 
     // calculate the new position of y
     let topVert = [x, y+actualLen, z, 1];
+    console.log("actual length "+actualLen);
+    console.log("y_up "+(y+actualLen)+" y_down "+y);
 
     // insert the color to our top vertex
     InsertData(topVert, color);
-    topVert.push(0.5);    // size 0.5
-
-    console.log("this drop top: " + topVert);
-    console.log("this drop bott: "+bottomVert);
+    topVert.push(1);    // size 0.5
 
     // insert topvert into bottom vert and return bottom vert
     // the form of bottomVert then be
@@ -89,7 +88,7 @@ function createRain(rainVerts, rainLen=0.03, volume=1, lineMaxVariation=1, color
     let droplets = [];
 
     // get a random amount of droplets affected by 
-    let max = 100;   // pass into getrandit to get a numebr between 0 and 10
+    let max = 10;   // pass into getrandit to get a numebr between 0 and 10
     let rainCount = randomRange(1, max) * volume;   // multiply result by volume to scale the amount of rain
 
     for(let i=0;i<rainCount;i++)

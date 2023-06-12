@@ -170,21 +170,14 @@
 
         }
 
-        // Renders the scene repeatedly.
-        function render(now)
+        /*
+            Sets up the scene by clearing old screen and getting the transform matrix thingies + setting up what camera will look @
+        */
+        function setScene()
         {
-            const lenPerVertex = 8;    // 8 array elements per vertex
-            now *= .001;    // converts to seconds
-            // get dt
-            dt = now - then;
-            // update then
-            then = now;
-
-            // set camera
-            
             const near = -1;
             const far = 10;
-            
+
             // setting up initial values/transform
             glMatrix.mat4.lookAt(viewMatrix, [0,0,-1,1], [0,0,1,1], [0,1,0,1]);
             // initial projection!
@@ -205,6 +198,34 @@
             gl.clearColor(0, 0, 0, 1.0);
             gl.clear(gl.COLOR_BUFFER_BIT);
 
+        }
+
+        function update(delta)
+        {
+            // update y manually -- i think sa mat4.translate, yung buong buffer or buong space ng buffer yung nattranslate instead of
+            // individual drops, which results in makikita mong gumagalaw lahat (even the newly created drops) as a unit / nagsspawn
+            // sa space na nakikita ng user xd
+            let sizeOfElement = 9;  // 9 floats per element
+            for(let i=1;i<allRain.length;i+=sizeOfElement)
+            {
+                // update the y manually?
+                allRain[i] -= delta;
+            }
+        }
+
+        // Renders the scene repeatedly.
+        function render(now)
+        {
+            const lenPerVertex = 8;    // 8 array elements per vertex
+            now *= .001;    // converts to seconds
+            // get dt
+            dt = now - then;
+            // update then
+            then = now;
+
+            // set camera
+            setScene();
+            
             // create and add to rain
             createRain(allRain);
 
@@ -214,8 +235,10 @@
             // DRAW
             gl.drawArrays(gl.LINES, 0, allRain.length/9);    // 8 is size of individual element arrays (4 pos, 4 color)
 
+            // call function to update
+            update(dt);
 
-            //requestAnimationFrame(render);
+            requestAnimationFrame(render);
         }
 
         // render
