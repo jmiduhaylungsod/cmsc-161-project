@@ -210,6 +210,18 @@
             {
                 // update the y manually?
                 allRain[i] -= delta;
+
+                // note that bottom vertex (for the rain) is an odd index, while top is even
+                // here we check if thie current vertex y is now past -1, meaning nasa bottom na
+                // we remove that drop from the array, para di madami laman ni allrain
+                if(i%2==0 && allRain[i] < -1)
+                {
+                    // indices to remove
+                    // top = i-1 (x) to i+8
+                    // bottom = i - sizeofelement - 1 (x) to i-2 (last element of bottom drop)
+                    // 18 elements to remove
+                    allRain.splice(i - sizeOfElement - 1, 18);
+                }
             }
         }
 
