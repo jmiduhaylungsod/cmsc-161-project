@@ -7,20 +7,11 @@ let allRain = [];
 function draw(gl)
 {
     // we use allrain in draw
-    createRain(allRain, 1, 1, (1,1,1,1));
+    createRain(allRain);
 
     console.log("cleared screen");
     
-    gl.drawArrays(gl.LINE, 0, allRain.length);
+    gl.drawArrays(gl.LINES, 0, allRain.length/8);    // 8 is size of individual element arrays (4 pos, 4 color)
 
 }
 
-
-function translate(translate, transformMatrix)
-{
-    // we basically remember the old transform matrix and add that with our new translation value.
-    for(let i=0;i<transformMatrix.length;i++)
-    {
-        transformMatrix[i] = transformMatrix[i] + translate[i];
-    }
-}

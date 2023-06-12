@@ -2,7 +2,6 @@
 <html>
     <canvas id="output" width="728" height="942"></canvas>
 
-    <script id="index" src="scripts/index.js"></script>
     <script id="rain" src="scripts/rain.js"></script>
     <script id="gl-matrix" src="scripts/gl-matrix.js"></script>
 
@@ -47,6 +46,17 @@
 
     <!--MAIN-->
     <script>
+        let allRain = [];
+
+        /*
+            TEMP -- PUT MODIFIABLE PARAMETERS HERE
+        */
+       var speed = 3;
+
+        /*
+            END OF TEMP REGION
+        */
+
 
         let then = 0;
 
@@ -78,12 +88,17 @@
         /*
             MATRIX FOR TRANSFORMING STUFF ?
         */
+        let transformMatrix = [
+            1,0,0,0,
+            0,1,0,0,
+            0,0,1,0,
+            0,0,0,1
+        ];
+
        // we create the matrices here.
         const modelMatrix = glMatrix.mat4.create();
         const viewMatrix = glMatrix.mat4.create();
         const projectionMatrix = glMatrix.mat4.create();
-        const near = -1;
-        const far = 10;
 
         /*
             POINTERS
@@ -91,6 +106,7 @@
 
         // we can access the pointers here already
         var vertexPositionPtr = gl.getAttribLocation(program, 'a_position');
+        var vertexSizePtr = gl.getAttribLocation(program, 'a_point_size');
         var vertexColorPtr = gl.getAttribLocation(program, 'in_Color');
         // for affine transformationheadVertexCount
         var transformPtr = gl.getUniformLocation(program, 'u_transformation_matrix');
@@ -100,52 +116,37 @@
         var viewPtr = gl.getUniformLocation(program, 'view');
         var projectionPtr = gl.getUniformLocation(program, 'projection');
 
-
-        // init values for tf matrix    
-        var transformMatrix = [
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1
-        ];
-
-        let tr_y=0;
-        
-
         /* 
             FORDA BUFFERS
         */
 
-        // buffer creation
+        // buffer creation for rain
         var rainBuffer = gl.createBuffer();
 
         init();
-        InitDrawVariables(rainBuffer);
 
         // uutualizes teh initial values of glmatrix -- initial
         function init()
         {
-            // setting up initial values/transform
-            glMatrix.mat4.lookAt(viewMatrix, [0,0,1,1], [0,0,0,1], [0,1,0,1]);
-            // initial projection!
-            glMatrix.mat4.ortho(projectionMatrix, -1, 1, -1, 1, near, far);
 
             // enabling vertex attrib arrays
             gl.enableVertexAttribArray(vertexPositionPtr);
             gl.enableVertexAttribArray(vertexColorPtr);
+            gl.enableVertexAttribArray(vertexSizePtr);
             gl.enable(gl.DEPTH_TEST);
         }
 
         /*
         *  Sets up the buffers, buffer data, and vertex pointers right before drawing.
         */
-        function InitDrawVariables(buffer)
+        function InitDrawVariables(buffer, points)
         {
             // SETTING UP BUFFERS ETC
             // binding the buffer
             gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
             // setting the data for the buffer
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(allRain), gl.STATIC_DRAW);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.STATIC_DRAW);
+            
 
             /*
             * FOR INTERPRETING THE DATA
@@ -153,14 +154,19 @@
 
             // POSITION
             var stride = 0;
-            var offset = 8 * Float32Array.BYTES_PER_ELEMENT;
+            var offset = 9 * Float32Array.BYTES_PER_ELEMENT;
 
             gl.vertexAttribPointer(vertexPositionPtr, 4, gl.FLOAT, false, offset, stride);
 
             // COLOR
-            stride = 4 * Float32Array.BYTES_PER_ELEMENT;        // after the position values
+            stride = 4 * Float32Array.BYTES_PER_ELEMENT;
             // same offset as above
             gl.vertexAttribPointer(vertexColorPtr, 4, gl.FLOAT, false, offset, stride);
+
+            // SIZE
+            stride = 8 * Float32Array.BYTES_PER_ELEMENT;
+            // same offset
+            gl.vertexAttribPointer(vertexSizePtr, 1, gl.FLOAT, false, offset, stride);
 
         }
 
@@ -168,34 +174,37 @@
         function render(now)
         {
             const lenPerVertex = 8;    // 8 array elements per vertex
-            now *= .001;
+            now *= .001;    // converts to seconds
             // get dt
             dt = now - then;
             // update then
             then = now;
 
-            // set transform thingy
-            let tmatrix = [0, 0, 0,
-                            0, 0, 0,
-                            0, tr_y, 0];
-
-            translate(tmatrix, transformMatrix);
-
-            // draw scene w rain
+            // set camera
+            
+            const near = -1;
+            const far = 10;
+            
+            // setting up initial values/transform
+            glMatrix.mat4.lookAt(viewMatrix, [0,0,-1,1], [0,0,1,1], [0,1,0,1]);
+            // initial projection!
+            glMatrix.mat4.ortho(projectionMatrix, -1, 1, -1, 1, near, far);
 
             // clear the screen
-            gl.clearColor(-1.0, -1.0, -1.0 , 1.0);
+            gl.clearColor(0, 0, 0, 1.0);
             gl.clear(gl.COLOR_BUFFER_BIT);
 
-            InitDrawVariables(rainBuffer);
-            draw(gl);
+            // create and add to rain
+            createRain(allRain);
 
-            // update y
-            tr_y *= dt;
+            // draw scene w rain
+            InitDrawVariables(rainBuffer, allRain);
 
-            
+            // DRAW
+            gl.drawArrays(gl.LINES, 0, allRain.length/9);    // 8 is size of individual element arrays (4 pos, 4 color)
 
-            requestAnimationFrame(render);
+
+            //requestAnimationFrame(render);
         }
 
         // render
