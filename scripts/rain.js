@@ -7,8 +7,6 @@
     > update existing set of rain droplets
  */
 
-let rainArr;    // array of rain droplets (ALL)
-
 // get number between min to max (inclusive)
 function randomRange(min, max) 
 {
@@ -75,7 +73,7 @@ function InsertData(dest, src)
 
     The volume determines how much rain exactly we should create
 */
-function createRain(volume=1, lineMaxVariation=1, color=(1,1,1,1))
+export function createRain(rainVerts, volume=1, lineMaxVariation=1, color=(1,1,1,1))
 {
     let droplets = [];
 
@@ -83,7 +81,7 @@ function createRain(volume=1, lineMaxVariation=1, color=(1,1,1,1))
     let max = 10;   // pass into getrandit to get a numebr between 0 and 10
     let rainCount = randomRange(1, max) * volume;   // multiply result by volume to scale the amount of rain
 
-    for(let i=0;i<rainCount;rain++)
+    for(let i=0;i<rainCount;i++)
     {
         // we add two points: the upper point and the lower point.
         // the droplets array must  look like this:
@@ -99,9 +97,8 @@ function createRain(volume=1, lineMaxVariation=1, color=(1,1,1,1))
         let drop = createDrop(color, lineMaxVariation);
         // add the drop into droplets
         InsertData(droplets, drop);
-
     }
 
-    // return all created droplets
-    return droplets;
+    // add the droplets to rainVerts
+    InsertData(rainVerts, droplets);
 }

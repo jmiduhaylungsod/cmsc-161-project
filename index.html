@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
     <canvas id="output" width="728" height="942"></canvas>
-    <!-- OTHER SCRIPTS -->
-    <script id="index" src="scripts/index.js"></script>
 
     <!-- SHADERS -->
     <script id="vertex-shader" type="notjs">#version 300 es
@@ -45,6 +43,8 @@
 
     <!--MAIN-->
     <script>
+        import * as INDEX from "scripts/index.js";
+
         let then = 0;
 
         // initialize the gl and shit
@@ -72,18 +72,103 @@
         gl.linkProgram(program);
         gl.useProgram(program);
 
+        /*
+            MATRIX FOR TRANSFORMING STUFF ?
+        */
+       // we create the matrices here.
+        const modelMatrix = glMatrix.mat4.create();
+        const viewMatrix = glMatrix.mat4.create();
+        const projectionMatrix = glMatrix.mat4.create();
+
+        /*
+            POINTERS
+        */
+
+        // we can access the pointers here already
+        var vertexPositionPtr = gl.getAttribLocation(program, 'a_position');
+        var vertexSizePtr = gl.getAttribLocation(program, 'a_point_size');
+        var vertexColorPtr = gl.getAttribLocation(program, 'in_Color');
+        // for affine transformationheadVertexCount
+        var transformPtr = gl.getUniformLocation(program, 'u_transformation_matrix');
+
+        // accessing the pointers for glMatrices here
+        var modelPtr = gl.getUniformLocation(program, 'model');
+        var viewPtr = gl.getUniformLocation(program, 'view');
+        var projectionPtr = gl.getUniformLocation(program, 'projection');
+        
+
+        /* 
+            FORDA BUFFERS
+        */
+
+        // buffer creation
+        var rainBuffer = gl.createBuffer();
+
+        init();
+        InitDrawVariables(rainBuffer);
+
+        // uutualizes teh initial values of glmatrix
+        function init()
+        {
+            // setting up initial values/transform
+            glMatrix.mat4.lookAt(viewMatrix, [0,0,1,1], [0,0,0,1], [0,1,0,1]);
+            // initial projection!
+            glMatrix.mat4.ortho(projectionMatrix, -1, 1, -1, 1, near, far);
+
+            // enabling vertex attrib arrays
+            gl.enableVertexAttribArray(vertexPositionPtr);
+            gl.enableVertexAttribArray(vertexColorPtr);
+            gl.enable(gl.DEPTH_TEST);
+        }
+
+        /*
+        *  Sets up the buffers, buffer data, and vertex pointers right before drawing.
+        */
+        function InitDrawVariables(buffer)
+        {
+            // SETTING UP BUFFERS ETC
+            // binding the buffer
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+            // setting the data for the buffer
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(INDEX.allRain), gl.STATIC_DRAW);
+
+            /*
+            * FOR INTERPRETING THE DATA
+            */
+
+            // POSITION
+            var stride = 0;
+            var offset = 8 * Float32Array.BYTES_PER_ELEMENT;
+
+            gl.vertexAttribPointer(vertexPositionPtr, 4, gl.FLOAT, false, offset, stride);
+
+            // COLOR
+            stride = 4 * Float32Array.BYTES_PER_ELEMENT;        // after the position values
+            // same offset as above
+            gl.vertexAttribPointer(vertexColorPtr, 4, gl.FLOAT, false, offset, stride);
+
+        }
+
         // Renders the scene repeatedly.
         function render(now)
         {
+            const lenPerVertex = 8;    // 8 array elements per vertex
             now *= .001;
             // get dt
             dt = now - then;
             // update then
             then = now;
 
-            // draw scene
-            draw(gl, );
+            // draw scene w rain
+            InitDrawVariables(rainBuffer);
+            INDEX.draw(gl);
+
             // update the y position of rain in rainArr based on dt.
+            for(let i=1;i<INDEX.allRain.length;i += lenPerVertex + 1)
+            {
+                INDEX.allRain[i] -= dt;   // negative kasi pababa siya
+            }
 
             requestAnimationFrame(render);
         }
